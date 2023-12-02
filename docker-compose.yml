@@ -1,0 +1,46 @@
+version: "3.8"
+services:
+  django_gunicorn:
+    volumes:
+      - static:/static
+    build: ./django_project
+    depends_on:
+      - db
+    expose:
+      - 8000
+    networks:
+      - dev-network
+
+  nginx:
+    build: ./nginx
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - static:/static
+    container_name: nginx
+    ports:
+      - 80:80
+    tty: true
+    restart: "on-failure"
+    depends_on:
+      - django_gunicorn
+    networks:
+      - dev-network
+      
+  db:
+    image: postgres
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    container_name: postgres_db
+    networks:
+      - dev-network
+
+volumes:
+  static:
+
+networks:
+  dev-network:
+    driver: bridge
