@@ -9,7 +9,7 @@ class Profile(models.Model):
     image = models.ImageField(upload_to='profile/image/')
 
     followers = models.ManyToManyField(User, blank=True, related_name='user_followers')
-    following = models.ManyToManyField(User, blank=True, related_name='user_following')
+    firends = models.ManyToManyField(User, blank=True, related_name='user_firends')
 
     update_at = models.DateTimeField(auto_now=True)
     create_at = models.DateTimeField(auto_now_add=True)
